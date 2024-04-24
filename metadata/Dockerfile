@@ -1,1 +1,1 @@
-FROM ghcr.io/compbiocore/bootcamp_scrna:mar_25_10-42-25_2024
+FROM ghcr.io/compbiocore/dscov_singlecell_2024:latest
