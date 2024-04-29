@@ -136,13 +136,12 @@ Open the Rproj file.<br>
 <h2 class="anchored" data-anchor-id="introduction-to-scrna-seq">Introduction to scRNA-seq</h2>
 <p>Much of this notebook is adapted from the Seurat vignettes https://satijalab.org/seurat and GitHub repository https://github.com/satijalab/seurat</p>
 <p>How does scRNAseq differ from bulk RNA-seq? In bulk RNA-seq you are taking a snapshot of expression of all the cells in a sample and your measurements are aggregated across all of those cells. In scRNAseq, you can get a sense of the heterogeneity of the cells in your sample. Are there novel or rare cell types? What about cell type specific gene expression? Does the distribution of different cell types change across time or treatment? This increased resolution comes with some unique challenges:</p>
-<pre><code>-   Dropouts - genes that are not detected in some cells, can lead to sparse expression matrices with many zero values.
-
--   Doublets - sequencing two cells at the same time and can't distinguish their expression or cell types, need to filter these out during QC.
-
--   Dying cells - you will lose some cells because they are dead or dying, you can also filter these out during sample QC.
-
--   You also should be cautious when thinking about your sample sizes. For example, you may be sequencing thousands of cells but if they all come from the same mouse you lose the ability to generalize your findings.</code></pre>
+<ul>
+<li><p>Dropouts - genes that are not detected in some cells, can lead to sparse expression matrices with many zero values.</p></li>
+<li><p>Doublets - sequencing two cells at the same time and can’t distinguish their expression or cell types, need to filter these out during QC.</p></li>
+<li><p>Dying cells - you will lose some cells because they are dead or dying, you can also filter these out during sample QC.</p></li>
+<li><p>You also should be cautious when thinking about your sample sizes. For example, you may be sequencing thousands of cells but if they all come from the same mouse you lose the ability to generalize your findings.</p></li>
+</ul>
 </section>
 <section id="seurat-objects-overview" class="level2">
 <h2 class="anchored" data-anchor-id="seurat-objects-overview">Seurat objects overview</h2>
@@ -211,13 +210,13 @@ Important
 <h2 class="anchored" data-anchor-id="parallelization-options-for-seurat-and-other-packages">Parallelization options for Seurat and other packages</h2>
 <p>First, we can set the <code>.libPaths()</code>, which essentially tells R that it should look for packages inside these locations inside the Singularity container.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/set lib paths_fa2d78c368a7de11f8106445785cdd43">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="fu">c</span>(<span class="st">'/usr/local/lib/R/site-library'</span>, <span class="st">'/usr/local/lib/R/library'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">.libPaths</span>(<span class="fu">c</span>(<span class="st">'/usr/local/lib/R/site-library'</span>, <span class="st">'/usr/local/lib/R/library'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>All of the methods we are discussing here involve computationally heavy methods, and as such also take advantage of parallelization where they can. Often in their documentation you will find how to use multiple cores when calling a function, usually involving a provided a rgument or involving a package called <code>future</code>. For example, Seurat has a <a href="https://satijalab.org/seurat/archive/v4.3/future_vignette">vignette on parallelization</a> with <code>future</code>. We will follow it here:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-2_7a4069db1758470b59cef87d14961c4d">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># check the current active plan</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># check the current active plan</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>sequential:
 - args: function (..., envir = parent.frame())
@@ -227,13 +226,13 @@ Important
 </div>
 <p><code>plan()</code> says that we are currently set up to run code <em>sequentially</em> or non-parallelized. To see more information, run this code chunk:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-3_3ef71bf8a84e4fbf8d33ce710bf8c621">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>?future<span class="sc">::</span>plan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>?future<span class="sc">::</span>plan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we set workers=8 because we’ve requested 8 cores. Additionally, we set <code>multisession</code> instead of <code>multiprocess</code> despite what the vignette says, because <code>multiprocess</code> is actually deprecated in <code>future</code> and we should be explicitly specifying <code>multisession</code> or <code>multico re</code> instead. Getting into the difference is out of scope of this workshop, but you can <a href="https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html">read more</a> on future yourself if interested.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-4_fa82d263ed8ad9669218025d7a60d9a0">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change the current plan to access parallelization</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers =</span> <span class="dv">4</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change the current plan to access parallelization</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers =</span> <span class="dv">4</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>multisession:
 - args: function (..., workers = 4, envir = parent.frame())
@@ -243,35 +242,35 @@ Important
 </div>
 <p>We’ll also set a seed at the start of the notebook so that we can reproduce our results if we decide to re-run this notebook at some future date. We also set <code>future.globals.maxSize</code>, see the Seurat future vignette linked above for discussion about why we do this (basical ly we might be exceeding the allowed global variable size so we make that default bigger). We will also track how long it takes us to run through this notebook:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-5_c5e637476e350dd8c488939fdd94be8d">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">61</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">future.globals.maxSize =</span> <span class="dv">4000</span> <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>nb.start.time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">61</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">future.globals.maxSize =</span> <span class="dv">4000</span> <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>nb.start.time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importing-data-and-interacting-with-seurat-objects" class="level2">
 <h2 class="anchored" data-anchor-id="importing-data-and-interacting-with-seurat-objects">Importing data and interacting with Seurat objects</h2>
 <p><strong>Much of this notebook is taken from the various Seurat vignettes: https://satijalab.org/seurat/articles/get_started.html</strong> First, load all the libraries we need, including some Seurat data packages. The last line will update the Seurat objects so that they are compatible with the newest version of Seurat.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-6_9fd57f5cad126701593121fc57f3177d">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdf5r)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">'ifnb.SeuratData'</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"ifnb"</span>)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">UpdateSeuratObject</span>(ifnb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(hdf5r)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">'ifnb.SeuratData'</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"ifnb"</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">UpdateSeuratObject</span>(ifnb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>We are using the <code>SeuratData</code> package for some test data.</li>
 <li>Use <code>AvailableData()</code> to see what datasets are available</li>
 </ul>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-7_a33851c34ad5647780fc51a4ccf73ac9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>SeuratData<span class="sc">::</span><span class="fu">AvailableData</span>() <span class="sc">%&gt;%</span> <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>SeuratData<span class="sc">::</span><span class="fu">AvailableData</span>() <span class="sc">%&gt;%</span> <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                   Dataset Version
 adiposeref.SeuratData           adiposeref   1.0.0
@@ -316,7 +315,7 @@ cbmc.SeuratData                        &lt;NA&gt;
 celegans.embryo.SeuratData             &lt;NA&gt;
 fetusref.SeuratData                    &lt;NA&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>SeuratData<span class="sc">::</span><span class="fu">AvailableData</span>() <span class="sc">%&gt;%</span> <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(Installed <span class="sc">==</span> <span class="st">'TRUE'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>SeuratData<span class="sc">::</span><span class="fu">AvailableData</span>() <span class="sc">%&gt;%</span> <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(Installed <span class="sc">==</span> <span class="st">'TRUE'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  Dataset Version                           Summary species
 ifnb.SeuratData      ifnb   3.1.0 IFNB-Stimulated and Control PBMCs   human
@@ -338,11 +337,11 @@ pbmc3k.SeuratData   pbmc3k.final  &lt;NA&gt;      TRUE            3.1.4</code></
 </ul>
 <p>The <code>ifnb</code> dataset is 14,000 IFNB-Stimulated and Control PBMCs (peripheral blood mononuclear cells).</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-8_d0f87fc9154df8f1faf99da78016a5d5">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>?ifnb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>?ifnb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Currently it has a <code>RNA</code> assay:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-9_ddd597c9b195c02ae8a088d55034e577">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ifnb<span class="sc">@</span>assays</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ifnb<span class="sc">@</span>assays</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$RNA
 Assay data with 14053 features for 13999 cells
@@ -353,7 +352,7 @@ ISG15, AGRN, C1orf159 </code></pre>
 </div>
 <p>We can look in the <code>metadata</code> slot. Each row is a cell, and we can see which experimental group the samples came from (<code>orig.ident</code> and <code>stim</code> both tell you this information), that the cell types have already been annotated (<code>seurat_annotations</code>) and that for each cell we have information about the number of genes (<code>nFeature_RNA</code>) and molecules (<code>nCount_RNA</code>) detected.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-10_3a3b6ef44a3da479e7d1d07fb604bfb9">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb<span class="sc">@</span>meta.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb<span class="sc">@</span>meta.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  orig.ident nCount_RNA nFeature_RNA stim seurat_annotations
 AAACATACATTTCC.1 IMMUNE_CTRL       3017          877 CTRL          CD14 Mono
@@ -366,7 +365,7 @@ AAACATACGGCATT.1 IMMUNE_CTRL       1581          557 CTRL          CD14 Mono</co
 </div>
 <p>We can look at the Seurat object we’ve loaded from SeuratData and see that Seurat v5 assays store data in layers. These layers can store raw, un-normalized counts (layer=‘counts’), normalized data (layer=‘data’) or z-scored/variance-stabilized data (layer=‘scale.data’).</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-11_2edb97075838cda70c2b9815bf112ba9">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ifnb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ifnb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>An object of class Seurat 
 14053 features across 13999 samples within 1 assay 
@@ -376,7 +375,7 @@ Active assay: RNA (14053 features, 0 variable features)
 </div>
 <p>We will aim to eventually integrate the different samples (<code>IMMUNE_CTRL</code> and <code>IMMUNE_STIM"</code> from <code>orig.ident</code>) together. In previous versions of Seurat, we would require the data to be represented as a list different different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-12_a9b00f4b87dffec0250789d670caecd2">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>ifnb[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(ifnb[[<span class="st">"RNA"</span>]], <span class="at">f =</span> ifnb<span class="sc">$</span>orig.ident)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ifnb[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(ifnb[[<span class="st">"RNA"</span>]], <span class="at">f =</span> ifnb<span class="sc">$</span>orig.ident)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Input is a v3 assay and `split()` only works for v5 assays; converting
 • to a v5 assay</code></pre>
@@ -384,7 +383,7 @@ Active assay: RNA (14053 features, 0 variable features)
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Assay RNA changing from Assay to Assay5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ifnb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ifnb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>An object of class Seurat 
 14053 features across 13999 samples within 1 assay 
@@ -400,20 +399,20 @@ Active assay: RNA (14053 features, 0 variable features)
 <li>We care about the percentage of reads that map to the mitochondrial genome because high mitochondrial reads in a cell can indicate that the cells are low-quality or dying cells. The mitochondrial QC metrics are calcualted with the <code>PercentageFeatureSet()</code> function, which calculates the percentage of counts originating from a set of features. We use the set of all genes starting with MT- as a set of mitochondrial genes – the format of the mt sequences will vary depending on which organism/genome is used…(might be ‘mt-’ for example). In this <code>ifnb</code> test dataset, there are no mitochondrial reads.</li>
 </ul>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/Figure out format of MT gene IDs_78d951c0a37d9c04a4ed95459859f4b5">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(ifnb) <span class="sc">%&gt;%</span> <span class="fu">grep</span>(<span class="at">pattern =</span> <span class="st">'^mt-'</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>, <span class="at">value =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(ifnb) <span class="sc">%&gt;%</span> <span class="fu">grep</span>(<span class="at">pattern =</span> <span class="st">'^mt-'</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>, <span class="at">value =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>character(0)</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/add mt percent data_632fc982e7ffe404afb02511f73c4729">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ifnb[[<span class="st">"percent.mt"</span>]] <span class="ot">&lt;-</span> <span class="fu">PercentageFeatureSet</span>(ifnb, <span class="at">pattern =</span> <span class="st">"^MT-"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ifnb[[<span class="st">"percent.mt"</span>]] <span class="ot">&lt;-</span> <span class="fu">PercentageFeatureSet</span>(ifnb, <span class="at">pattern =</span> <span class="st">"^MT-"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Before we plot, we can set the order of the object idents to whatever order we’d like:</li>
 </ul>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-13_0450dd39957ee46137d11937a3828226">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb) <span class="ot">&lt;-</span> <span class="st">'orig.ident'</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(ifnb) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"IMMUNE_CTRL"</span>, <span class="st">"IMMUNE_STIM"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb) <span class="ot">&lt;-</span> <span class="st">'orig.ident'</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(ifnb) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"IMMUNE_CTRL"</span>, <span class="st">"IMMUNE_STIM"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>We can also look at plots showing the distribution of the <code>percent.mt</code>, <code>nFeature_RNA</code> and <code>nCount_RNA</code></li>
@@ -421,7 +420,7 @@ Active assay: RNA (14053 features, 0 variable features)
 <li><code>nCount_RNA</code> is the number of UMIs (unique molecules – like counts)</li>
 </ul>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-14_f751e92f0087b960682ca91b691d5631">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, <span class="at">features =</span> <span class="st">"nFeature_RNA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, <span class="at">features =</span> <span class="st">"nFeature_RNA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -429,7 +428,7 @@ Active assay: RNA (14053 features, 0 variable features)
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, <span class="at">features =</span> <span class="st">"nCount_RNA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, <span class="at">features =</span> <span class="st">"nCount_RNA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -437,7 +436,7 @@ Active assay: RNA (14053 features, 0 variable features)
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, <span class="at">features=</span><span class="st">"percent.mt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, <span class="at">features=</span><span class="st">"percent.mt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in SingleExIPlot(type = type, data = data[, x, drop = FALSE], idents =
 idents, : All cells have the same value of percent.mt.</code></pre>
@@ -451,7 +450,7 @@ idents, : All cells have the same value of percent.mt.</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-15_b49a227b853c5d048bf4ebb3147a52e6">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureScatter</span>(ifnb, <span class="at">feature1 =</span> <span class="st">"nCount_RNA"</span>, <span class="at">feature2 =</span> <span class="st">"nFeature_RNA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureScatter</span>(ifnb, <span class="at">feature1 =</span> <span class="st">"nCount_RNA"</span>, <span class="at">feature2 =</span> <span class="st">"nFeature_RNA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -459,7 +458,7 @@ idents, : All cells have the same value of percent.mt.</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureScatter</span>(ifnb, <span class="at">feature1 =</span> <span class="st">"nCount_RNA"</span>, <span class="at">feature2 =</span> <span class="st">"percent.mt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureScatter</span>(ifnb, <span class="at">feature1 =</span> <span class="st">"nCount_RNA"</span>, <span class="at">feature2 =</span> <span class="st">"percent.mt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in cor(x = data[, 1], y = data[, 2]): the standard deviation is zero</code></pre>
 </div>
@@ -470,7 +469,7 @@ idents, : All cells have the same value of percent.mt.</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureScatter</span>(ifnb, <span class="at">feature1 =</span> <span class="st">"nFeature_RNA"</span>, <span class="at">feature2 =</span> <span class="st">"percent.mt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureScatter</span>(ifnb, <span class="at">feature1 =</span> <span class="st">"nFeature_RNA"</span>, <span class="at">feature2 =</span> <span class="st">"percent.mt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in cor(x = data[, 1], y = data[, 2]): the standard deviation is zero</code></pre>
 </div>
@@ -489,12 +488,12 @@ idents, : All cells have the same value of percent.mt.</code></pre>
 <li>We use <code>scale_color_gradientn</code> to specify how the points should be colored, specifying that the limit should be between 0 and 10 and that we should <code>squish</code> anything that is out of bounds (effectively making our limits 0 and &gt;10).</li>
 </ul>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-16_43cdb514a2b40bcb1c6e9b9452d52c56">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>qc_data <span class="ot">&lt;-</span> ifnb<span class="sc">@</span>meta.data[<span class="fu">c</span>(<span class="st">'orig.ident'</span>,<span class="st">'nCount_RNA'</span>,<span class="st">'nFeature_RNA'</span>,<span class="st">'percent.mt'</span>)] <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(percent.mt)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(qc_data, <span class="fu">aes</span>(<span class="at">x =</span> nCount_RNA, <span class="at">y =</span> nFeature_RNA, <span class="at">color =</span> percent.mt)) <span class="sc">+</span> </span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">5</span>, <span class="st">"Spectral"</span>)), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), <span class="at">oob =</span> (scales<span class="sc">::</span>squish)) <span class="sc">+</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>orig.ident) <span class="sc">+</span> </span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>qc_data <span class="ot">&lt;-</span> ifnb<span class="sc">@</span>meta.data[<span class="fu">c</span>(<span class="st">'orig.ident'</span>,<span class="st">'nCount_RNA'</span>,<span class="st">'nFeature_RNA'</span>,<span class="st">'percent.mt'</span>)] <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(percent.mt)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(qc_data, <span class="fu">aes</span>(<span class="at">x =</span> nCount_RNA, <span class="at">y =</span> nFeature_RNA, <span class="at">color =</span> percent.mt)) <span class="sc">+</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">5</span>, <span class="st">"Spectral"</span>)), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">10</span>), <span class="at">oob =</span> (scales<span class="sc">::</span>squish)) <span class="sc">+</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>orig.ident) <span class="sc">+</span> </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -520,12 +519,12 @@ idents, : All cells have the same value of percent.mt.</code></pre>
 <li>Let’s filter our data using <code>subset</code>, we’ll keep cells that have between 500 and 7000 nFeature_RNA (genes), greater than 1000 molecules, and less than 5% mitochondrial reads.</li>
 </ul>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-17_0edabbe69ac71d0a26fb7168a9762c41">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">subset</span>(ifnb, <span class="at">subset =</span> nFeature_RNA <span class="sc">&gt;</span> <span class="dv">500</span> <span class="sc">&amp;</span> nFeature_RNA <span class="sc">&lt;</span> <span class="dv">7000</span> <span class="sc">&amp;</span> percent.mt <span class="sc">&lt;</span> <span class="dv">5</span> <span class="sc">&amp;</span> nCount_RNA <span class="sc">&gt;</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">subset</span>(ifnb, <span class="at">subset =</span> nFeature_RNA <span class="sc">&gt;</span> <span class="dv">500</span> <span class="sc">&amp;</span> nFeature_RNA <span class="sc">&lt;</span> <span class="dv">7000</span> <span class="sc">&amp;</span> percent.mt <span class="sc">&lt;</span> <span class="dv">5</span> <span class="sc">&amp;</span> nCount_RNA <span class="sc">&gt;</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then I’ll subset the object to make is easier to work with and confirm that we have similar number of cells from each experimental group:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-18_4eaa725d3befa9c63343fbf3dd538a73">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub<span class="ot">&lt;-</span> <span class="fu">subset</span>(ifnb_sub, <span class="at">cells =</span> <span class="fu">sample</span>(<span class="at">x =</span> <span class="fu">rownames</span>(ifnb_sub<span class="sc">@</span>assays<span class="sc">$</span>RNA<span class="sc">@</span>cells<span class="sc">@</span>.Data), <span class="at">size =</span> <span class="dv">5000</span>) )</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>orig.ident)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub<span class="ot">&lt;-</span> <span class="fu">subset</span>(ifnb_sub, <span class="at">cells =</span> <span class="fu">sample</span>(<span class="at">x =</span> <span class="fu">rownames</span>(ifnb_sub<span class="sc">@</span>assays<span class="sc">$</span>RNA<span class="sc">@</span>cells<span class="sc">@</span>.Data), <span class="at">size =</span> <span class="dv">5000</span>) )</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>orig.ident)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 IMMUNE_CTRL IMMUNE_STIM 
@@ -552,17 +551,17 @@ IMMUNE_CTRL IMMUNE_STIM
 <h3 class="anchored" data-anchor-id="running-sctransform">Running SCTransform</h3>
 <p>We will normalize using SCTransform and you might get see a warning that says ‘iteration limit reached’ when you run the function. This warning can be ignored (https://github.com/satijalab/sctransform/issues/25) because the parameter estimation generating this warning is regularized later anyway. You can use the <code>vars.to.regress</code> argument to regress out nuisance variables (like cell cycle, batch effects, or <code>percent.mt</code>). By default SCTransform will only return data for variable genes in the scale data slot – adding the <code>return.only.var.genes = FALSE</code> argument to the function call to should solve this issue (https://github.com/satijalab/seurat/issues/3553). We will also track how long it takes to run:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/SCTransform_483aae5a0bea19f9d63f245484de399a">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>start.time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(ifnb_sub, <span class="at">vars.to.regress =</span> <span class="st">"percent.mt"</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">return.only.var.genes =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>end.time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>end.time <span class="sc">-</span> start.time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>start.time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(ifnb_sub, <span class="at">vars.to.regress =</span> <span class="st">"percent.mt"</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>, <span class="at">return.only.var.genes =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>end.time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>end.time <span class="sc">-</span> start.time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Time difference of 2.4923 mins</code></pre>
 </div>
 </div>
 <p>Run PCA and make an elbow plot</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-19_b9b6826c65a08919817673f2a350e1f0">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(ifnb_sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(ifnb_sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in PrepDR(object = object, features = features, verbose = verbose): The
 following 20 features requested have not been scaled (running reduction without
@@ -606,7 +605,7 @@ Negative:  HLA-DRA, CD74, LYZ, HLA-DPB1, IL8, HLA-DQA1, HLA-DRB1, S100A8, TXN, H
        NKG7, GNLY, CCL5, MARCKSL1, CST7, HLA-DQB1, GZMB, S100A9, RPL3, FTL 
        RPS4X, RPS18, GAPDH, RPL10, RPL13, LGALS1, ALOX5AP, S100A10, RPS2, GPX1 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ElbowPlot</span>(ifnb_sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ElbowPlot</span>(ifnb_sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -627,34 +626,33 @@ Harmony (method=HarmonyIntegration)
 FastMNN (method= FastMNNIntegration)
 scVI (method=scVIIntegration)</code></pre>
 <p>A detailed discussion of these different methods is outside the scope of this workshop, but you can find more detail on each method in Seurat’s documentation. However, the Seurat authors state:</p>
-<pre><code>By identifying shared sources of variation between datasets, CCA is well-suited for identifying anchors when cell types are conserved, but there are very substantial differences in gene expression across experiments. CCA-based integration therefore enables integrative analysis when experimental conditions or disease states introduce very strong expression shifts, or when integrating datasets across modalities and species. However, CCA-based integration may also lead to overcorrection, especially when a large proportion of cells are non-overlapping across datasets.
-
-RPCA-based integration runs significantly faster, and also represents a more conservative approach where cells in different biological states are less likely to ‘align’ after integration. We therefore recommend RPCA during integrative analysis where:
-
-    A substantial fraction of cells in one dataset have no matching type in the other
-    Datasets originate from the same platform (i.e. multiple lanes of 10x genomics)
-    There are a large number of datasets or cells to integrate (see here for more tips on integrating large datasets)</code></pre>
+<p>By identifying shared sources of variation between datasets, CCA is well-suited for identifying anchors when cell types are conserved, but there are very substantial differences in gene expression across experiments. CCA-based integration therefore enables integrative analysis when experimental conditions or disease states introduce very strong expression shifts, or when integrating datasets across modalities and species. However, CCA-based integration may also lead to overcorrection, especially when a large proportion of cells are non-overlapping across datasets. RPCA-based integration runs significantly faster, and also represents a more conservative approach where cells in different biological states are less likely to ‘align’ after integration. We therefore recommend RPCA during integrative analysis where:</p>
+<ul>
+<li>A substantial fraction of cells in one dataset have no matching type in the other</li>
+<li>Datasets originate from the same platform (i.e.&nbsp;multiple lanes of 10x genomics)</li>
+<li>There are a large number of datasets or cells to integrate (see here for more tips on integrating large datasets)</li>
+</ul>
 <p>We will run <code>CCAIntegration</code> (this was the default flavor of integration in previous versions of Seurat), <code>RPCAIntegration</code>, and <code>HarmonyIntegration</code>. Note that we are specifying that we used <code>SCT</code> normalization:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-20_131a43165fe2d747ecf2fb7e90792409">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> ifnb_sub, <span class="at">method =</span> CCAIntegration,</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, <span class="at">new.reduction =</span> <span class="st">"integrated.cca"</span>, <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> ifnb_sub, <span class="at">method =</span> CCAIntegration,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, <span class="at">new.reduction =</span> <span class="st">"integrated.cca"</span>, <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-21_f0138f8e49bfb2e3a3f75f969389acee">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> ifnb_sub, <span class="at">method =</span> RPCAIntegration,</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, <span class="at">new.reduction =</span> <span class="st">"integrated.rpca"</span>, <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> ifnb_sub, <span class="at">method =</span> RPCAIntegration,</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, <span class="at">new.reduction =</span> <span class="st">"integrated.rpca"</span>, <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-22_968d86a26c545280f51a47def5787814">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> ifnb_sub, <span class="at">method =</span> HarmonyIntegration,</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, <span class="at">new.reduction =</span> <span class="st">"harmony"</span>, <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> ifnb_sub, <span class="at">method =</span> HarmonyIntegration,</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, <span class="at">new.reduction =</span> <span class="st">"harmony"</span>, <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: HarmonyMatrix is deprecated and will be removed in the future from the
 API in the future</code></pre>
@@ -690,14 +688,14 @@ This warning is displayed once per session.</code></pre>
 </div>
 <p>Seurat will cluster your cells into groups of cells with similar expression patterns. The first step is <code>FindNeighbors</code>, which will construct a K-nearest neighbor (KNN) graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard similarity). To cluster the cells, we run <code>FindClusters</code> to apply the Louvain algorithm to iteratively group cells together, with the goal of optimizing the standard modularity function. <code>FindClusters</code> takes a <code>resolution</code> argument (defaults to a value of 0.8), which sets the granularity of the clustering, setting this parameter between 0.4-1.2 typically returns good results for single-cell datasets of around 3K cells but the resolution might increase for larger datasets. Use a value above 1 if you want a larger number of communities (clusters), and a value below 1 if you want a smaller number of communities.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-23_ab8d6c58029169235bfbcb5280d129eb">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Computing nearest neighbor graph</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Computing SNN</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(ifnb_sub, <span class="at">resolution =</span> .<span class="dv">8</span>, <span class="at">cluster.name =</span> <span class="st">"cca_clusters"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(ifnb_sub, <span class="at">resolution =</span> .<span class="dv">8</span>, <span class="at">cluster.name =</span> <span class="st">"cca_clusters"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
@@ -709,12 +707,12 @@ Maximum modularity in 10 random starts: 0.8647
 Number of communities: 14
 Elapsed time: 0 seconds</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"integrated.rpca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"integrated.rpca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Computing nearest neighbor graph
 Computing SNN</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(ifnb_sub, <span class="at">resolution =</span> .<span class="dv">8</span>, <span class="at">cluster.name =</span> <span class="st">"rpca_clusters"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(ifnb_sub, <span class="at">resolution =</span> .<span class="dv">8</span>, <span class="at">cluster.name =</span> <span class="st">"rpca_clusters"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
@@ -726,12 +724,12 @@ Maximum modularity in 10 random starts: 0.8631
 Number of communities: 14
 Elapsed time: 0 seconds</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"harmony"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"harmony"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Computing nearest neighbor graph
 Computing SNN</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(ifnb_sub, <span class="at">resolution =</span> .<span class="dv">8</span>, <span class="at">cluster.name =</span> <span class="st">"harmony_clusters"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(ifnb_sub, <span class="at">resolution =</span> .<span class="dv">8</span>, <span class="at">cluster.name =</span> <span class="st">"harmony_clusters"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
@@ -746,7 +744,7 @@ Elapsed time: 0 seconds</code></pre>
 </div>
 <p>Run UMAP (Uniform Manifold Approximation and Projection) dimensional reduction technique on the unintegrated data and the different integration methods:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-24_5355920feb8d357a62a664a48799e0fa">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(ifnb_sub, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">reduction.name =</span> <span class="st">"umap.unintegrated"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(ifnb_sub, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">reduction =</span> <span class="st">"pca"</span>, <span class="at">reduction.name =</span> <span class="st">"umap.unintegrated"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: The default method for RunUMAP has changed from calling Python UMAP via reticulate to the R-native UWOT using the cosine metric
 To use Python UMAP via reticulate, set umap.method to 'umap-learn' and metric to 'correlation'
@@ -792,7 +790,7 @@ This message will be shown once per session</code></pre>
 18:50:44 Commencing optimization for 500 epochs, with 198264 positive edges
 18:50:50 Optimization finished</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">reduction.name =</span> <span class="st">"umap.cca"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">reduction.name =</span> <span class="st">"umap.cca"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>18:50:50 UMAP embedding parameters a = 0.9922 b = 1.112
 Found more than one class "dist" in cache; using the first, from namespace 'spam'
@@ -813,7 +811,7 @@ Also defined by 'BiocGenerics'
 18:50:53 Commencing optimization for 500 epochs, with 200910 positive edges
 18:50:58 Optimization finished</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"integrated.rpca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">reduction.name =</span> <span class="st">"umap.rpca"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"integrated.rpca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">reduction.name =</span> <span class="st">"umap.rpca"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>18:50:58 UMAP embedding parameters a = 0.9922 b = 1.112
 Found more than one class "dist" in cache; using the first, from namespace 'spam'
@@ -834,7 +832,7 @@ Also defined by 'BiocGenerics'
 18:51:01 Commencing optimization for 500 epochs, with 199354 positive edges
 18:51:07 Optimization finished</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"harmony"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">reduction.name =</span> <span class="st">"umap.harmony"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(ifnb_sub, <span class="at">reduction =</span> <span class="st">"harmony"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">reduction.name =</span> <span class="st">"umap.harmony"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>18:51:07 UMAP embedding parameters a = 0.9922 b = 1.112
 Found more than one class "dist" in cache; using the first, from namespace 'spam'
@@ -857,15 +855,15 @@ Also defined by 'BiocGenerics'
 </div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-25_176ecc7cd3bc9f00f6dac7343b6f055b">
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
-<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.unintegrated"</span>,</span>
-<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
-<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,  </span>
-<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span></span>
-<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.unintegrated"</span>,</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,  </span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -878,14 +876,14 @@ Also defined by 'BiocGenerics'
 </div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-26_227af4b5a691b487bf421473116a9b1f">
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
-<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
-<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.rpca"</span>,</span>
-<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"rpca_clusters"</span>,</span>
-<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
-<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span></span>
-<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.rpca"</span>,</span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"rpca_clusters"</span>,</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -898,14 +896,14 @@ Also defined by 'BiocGenerics'
 </div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-27_be264a651f2be2a71b890b120ceeabec">
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
-<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
-<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.harmony"</span>,</span>
-<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"harmony_clusters"</span>,</span>
-<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
-<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span></span>
-<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.harmony"</span>,</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"harmony_clusters"</span>,</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -918,14 +916,14 @@ Also defined by 'BiocGenerics'
 </div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-28_d5c07cf377d7e88bd0cfe02bb3af4be3">
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
-<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
-<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
-<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
-<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
-<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span></span>
-<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a>p4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span></span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>p4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -939,16 +937,16 @@ Also defined by 'BiocGenerics'
 </div>
 <p>You can manually set the colors for the clusters, like this: First, get a list of all the built in colors that R knows about and use <code>grep</code> to remove anything with <code>gray</code> or <code>grey</code> in the color name.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-29_240a5d63c02fc1927670bad953ecc500">
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> grDevices<span class="sc">::</span><span class="fu">colors</span>()[<span class="fu">grep</span>(<span class="st">'gr(a|e)y|light'</span>, grDevices<span class="sc">::</span><span class="fu">colors</span>(), <span class="at">invert =</span> T)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> grDevices<span class="sc">::</span><span class="fu">colors</span>()[<span class="fu">grep</span>(<span class="st">'gr(a|e)y|light'</span>, grDevices<span class="sc">::</span><span class="fu">colors</span>(), <span class="at">invert =</span> T)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then pick enough colors from that list so that each <code>cca_cluster</code> has its own color</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-30_3e501db37ce8b5e9b8d77aaecdd5e8df">
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>cca_cluster_colors <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="at">x =</span> colors, <span class="at">size =</span> ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>cca_clusters <span class="sc">%&gt;%</span> <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="fu">length</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>cca_cluster_colors <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="at">x =</span> colors, <span class="at">size =</span> ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>cca_clusters <span class="sc">%&gt;%</span> <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="fu">length</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Assign names so that each color is associated with a cluster identity:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-31_7e2d2fa6ccb1e3b0b18586f583bed3db">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cca_cluster_colors) <span class="ot">&lt;-</span>ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>cca_clusters <span class="sc">%&gt;%</span> <span class="fu">unique</span>() </span>
-<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>cca_cluster_colors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cca_cluster_colors) <span class="ot">&lt;-</span>ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>cca_clusters <span class="sc">%&gt;%</span> <span class="fu">unique</span>() </span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>cca_cluster_colors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               8               10                1                2 
           "blue"   "deepskyblue1" "darkgoldenrod1"     "palegreen2" 
@@ -962,18 +960,18 @@ Also defined by 'BiocGenerics'
 </div>
 <p>We can do the same and use the <code>Zissou</code> palette with <code>hcl.colors</code> (run <code>hcl.pals()</code> to see all options)</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-32_58253d893c563ccf0c691e130d9cf5a9">
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>zissou_colors <span class="ot">&lt;-</span> <span class="fu">hcl.colors</span>( ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>cca_clusters <span class="sc">%&gt;%</span> <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="fu">length</span>(), <span class="st">"Zissou 1"</span>)</span>
-<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(zissou_colors) <span class="ot">&lt;-</span>ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>cca_clusters <span class="sc">%&gt;%</span> <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>zissou_colors <span class="ot">&lt;-</span> <span class="fu">hcl.colors</span>( ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>cca_clusters <span class="sc">%&gt;%</span> <span class="fu">unique</span>() <span class="sc">%&gt;%</span> <span class="fu">length</span>(), <span class="st">"Zissou 1"</span>)</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(zissou_colors) <span class="ot">&lt;-</span>ifnb_sub<span class="sc">@</span>meta.data<span class="sc">$</span>cca_clusters <span class="sc">%&gt;%</span> <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-33_38cd3538c2b3d5b935da9bc997e3066c">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(</span>
-<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
-<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
-<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
-<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
-<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span>,</span>
-<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> cca_cluster_colors</span>
-<span id="cb107-8"><a href="#cb107-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(</span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
+<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
+<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
+<span id="cb105-6"><a href="#cb105-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">combine =</span> <span class="cn">FALSE</span>, <span class="at">label.size =</span> <span class="dv">2</span>,</span>
+<span id="cb105-7"><a href="#cb105-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> cca_cluster_colors</span>
+<span id="cb105-8"><a href="#cb105-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -987,16 +985,16 @@ Also defined by 'BiocGenerics'
 </div>
 <p>We can leave the legend off, use the Zissou colors, omit the <code>split_by</code> argument and the legend:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-34_1850b7fe86515b08b667a1746aa90be3">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>zissou_plot <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
-<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
-<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> zissou_colors</span>
-<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span> <span class="fu">NoLegend</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>zissou_plot <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>  ifnb_sub,</span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">cols =</span> zissou_colors</span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span> <span class="fu">NoLegend</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then we can label the clusters:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-35_8f6ffb02e70b8f386dbd582bff51a75b">
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">LabelClusters</span>(<span class="at">plot =</span> zissou_plot , <span class="at">id =</span> <span class="st">"cca_clusters"</span>, <span class="at">box =</span> T, <span class="at">repel =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">LabelClusters</span>(<span class="at">plot =</span> zissou_plot , <span class="at">id =</span> <span class="st">"cca_clusters"</span>, <span class="at">box =</span> T, <span class="at">repel =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1007,21 +1005,21 @@ Also defined by 'BiocGenerics'
 </div>
 <p>Once integrative analysis is complete, you can rejoin the layers - which collapses the individual datasets together and recreates the original counts and data layers. You will need to do this before performing any differential expression analysis. However, you can always resplit the layers in case you would like to reperform integrative analysis.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-36_638497d95b698f10bff993ad647dc44f">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(ifnb_sub, <span class="at">assay =</span><span class="st">'RNA'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(ifnb_sub, <span class="at">assay =</span><span class="st">'RNA'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="differential-expression-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="differential-expression-analysis">Differential expression analysis</h2>
 <p>The bulk of Seurat’s differential expression features can be accessed through the <code>FindMarkers()</code> function. By default, Seurat performs differential expression (DE) testing based on the non-parametric Wilcoxon rank sum test. To test for DE genes between two specific groups of cells, specify the <code>ident.1</code> and <code>ident.2</code> parameters. Since we normalized using SCTransform, we have to run <code>PrepSCTFindMarkers()</code> first. Given a merged object with multiple SCT models, this function uses minimum of the median UMI (calculated using the raw UMI counts) of individual objects to reverse the individual SCT regression model using minimum of median UMI as the sequencing depth covariate. The counts slot of the SCT assay is replaced with recorrected counts and the data slot is replaced with log1p of recorrected counts. Then set the <code>DefaultAssay</code> to be the RNA assay.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-37_1927d7b4bbce80a26eef7fbd354731ab">
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb_sub) <span class="ot">&lt;-</span> <span class="st">"orig.ident"</span></span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">PrepSCTFindMarkers</span>(ifnb_sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb_sub) <span class="ot">&lt;-</span> <span class="st">"orig.ident"</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>ifnb_sub <span class="ot">&lt;-</span> <span class="fu">PrepSCTFindMarkers</span>(ifnb_sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Found 2 SCT models. Recorrecting SCT counts using minimum median counts: 1674.5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(ifnb_sub) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
-<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>stim_vs_ctrl <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(ifnb_sub, <span class="at">ident.1 =</span> <span class="st">"IMMUNE_STIM"</span>, <span class="at">ident.2 =</span> <span class="st">"IMMUNE_CTRL"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(ifnb_sub) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>stim_vs_ctrl <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(ifnb_sub, <span class="at">ident.1 =</span> <span class="st">"IMMUNE_STIM"</span>, <span class="at">ident.2 =</span> <span class="st">"IMMUNE_CTRL"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>For a (much!) faster implementation of the Wilcoxon Rank Sum Test,
 (default method for FindMarkers) please install the presto package
@@ -1033,7 +1031,7 @@ After installation of presto, Seurat will automatically use the more
 efficient implementation (no further action necessary).
 This message will be shown once per session</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(stim_vs_ctrl <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p_val_adj <span class="sc">&lt;</span> .<span class="dv">05</span> <span class="sc">&amp;</span> avg_log2FC <span class="sc">&gt;</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(stim_vs_ctrl <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p_val_adj <span class="sc">&lt;</span> .<span class="dv">05</span> <span class="sc">&amp;</span> avg_log2FC <span class="sc">&gt;</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      p_val avg_log2FC pct.1 pct.2 p_val_adj
 IFIT1     0   73.28255 0.901 0.028         0
@@ -1052,8 +1050,8 @@ pct.2 : The percentage of cells where the feature is detected in the second grou
 p_val_adj : Adjusted p-value, based on Bonferroni correction using all features in the dataset.</code></pre>
 <p>If the <code>ident.2</code> argument is omitted, <code>FindMarkers</code> will test for differentially expressed features between the group specified by <code>ident.1</code> and all other cells. Additionally, the parameter <code>only.pos</code> can be set to TRUE to only search for positive markers, i.e.&nbsp;features that are more highly expressed in the ident.1 group.</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-38_32fff991038c2c740a80000b391defae">
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>stim_vs_all <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(ifnb_sub, <span class="at">ident.1 =</span> <span class="st">"IMMUNE_STIM"</span>, <span class="at">only.pos =</span> T)</span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(stim_vs_all <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p_val_adj <span class="sc">&lt;</span> .<span class="dv">05</span> <span class="sc">&amp;</span> avg_log2FC <span class="sc">&gt;</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>stim_vs_all <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(ifnb_sub, <span class="at">ident.1 =</span> <span class="st">"IMMUNE_STIM"</span>, <span class="at">only.pos =</span> T)</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(stim_vs_all <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p_val_adj <span class="sc">&lt;</span> .<span class="dv">05</span> <span class="sc">&amp;</span> avg_log2FC <span class="sc">&gt;</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      p_val avg_log2FC pct.1 pct.2 p_val_adj
 IFIT1     0   73.28255 0.901 0.028         0
@@ -1067,11 +1065,11 @@ IFIT2     0   33.96453 0.775 0.035         0</code></pre>
 <p>Since we only have two groups (<code>IMMUNE_STIM</code> and <code>IMMUNE_CTRL</code>), the results of <code>stim_v_all</code> and <code>stim_vs_ctrl</code> are comparing the same groups and results are very similar.</p>
 <p>We can switch idents to find marker genes for the clusters:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-39_cf07dbf46741162e2fecc4236001aba9">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb_sub) <span class="ot">&lt;-</span> <span class="st">'cca_clusters'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb_sub) <span class="ot">&lt;-</span> <span class="st">'cca_clusters'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Use <code>FindAllMarkers</code> to compare each cluster to all the other clusters. For the sake of speed, we are selecting only positive genes that are expressed in at least 90% of the cells for a given cluster:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-40_16d53e2b5c93cd4714cedcaf9df8aa6d">
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>cca_markers <span class="ot">&lt;-</span> <span class="fu">FindAllMarkers</span>(ifnb_sub, <span class="at">min.pct =</span> .<span class="dv">90</span>, <span class="at">only.pos=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>cca_markers <span class="ot">&lt;-</span> <span class="fu">FindAllMarkers</span>(ifnb_sub, <span class="at">min.pct =</span> .<span class="dv">90</span>, <span class="at">only.pos=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Calculating cluster 0</code></pre>
 </div>
@@ -1117,12 +1115,12 @@ IFIT2     0   33.96453 0.775 0.035         0</code></pre>
 </div>
 <p>Look at the 3 marker genes with the biggest fold change per cluster</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-41_810ceb467eee6e571b2bd35a07f573a8">
-<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a>top_cluster_markers <span class="ot">&lt;-</span> </span>
-<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>  cca_markers <span class="sc">%&gt;%</span> </span>
-<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
-<span id="cb137-4"><a href="#cb137-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(avg_log2FC <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb137-5"><a href="#cb137-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="at">n =</span> <span class="dv">3</span>, <span class="at">wt =</span> avg_log2FC)</span>
-<span id="cb137-6"><a href="#cb137-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(top_cluster_markers, <span class="at">n =</span> <span class="dv">37</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>top_cluster_markers <span class="ot">&lt;-</span> </span>
+<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a>  cca_markers <span class="sc">%&gt;%</span> </span>
+<span id="cb135-3"><a href="#cb135-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb135-4"><a href="#cb135-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(avg_log2FC <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb135-5"><a href="#cb135-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="at">n =</span> <span class="dv">3</span>, <span class="at">wt =</span> avg_log2FC)</span>
+<span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(top_cluster_markers, <span class="at">n =</span> <span class="dv">37</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 39 × 7
 # Groups:   cluster [14]
@@ -1170,9 +1168,9 @@ IFIT2     0   33.96453 0.775 0.035         0</code></pre>
 </div>
 <p>Make a <code>FeaturePlot</code> to look at the expression of one of the cluster markers. It will plot the <code>data</code> slot from the default assay. We can switch the default assay to SCT first and specify that we want to use the <code>data</code> slot (log1p(counts)(:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-42_0e9eb001d9f9e27c48c1a7b3407866a7">
-<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(ifnb_sub) <span class="ot">&lt;-</span> <span class="st">"SCT"</span></span>
-<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(ifnb_sub) <span class="ot">&lt;-</span> <span class="st">"SCT"</span></span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1183,7 +1181,7 @@ IFIT2     0   33.96453 0.775 0.035         0</code></pre>
 </div>
 <p>We can adjust the default colors and use one of the <code>viridis</code> palettes:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-43_c8f7332c681d76e7f12244c376e53639">
-<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>) <span class="sc">&amp;</span> <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">turbo</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">direction =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>) <span class="sc">&amp;</span> <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">turbo</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">direction =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for colour is already present.
 Adding another scale for colour, which will replace the existing scale.</code></pre>
@@ -1198,7 +1196,7 @@ Adding another scale for colour, which will replace the existing scale.</code></
 </div>
 <p>We can add the cluster labels:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-44_26a9be8f1b7c470d377259978c7640a8">
-<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">turbo</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">direction =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">turbo</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">direction =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for colour is already present.
 Adding another scale for colour, which will replace the existing scale.</code></pre>
@@ -1213,7 +1211,7 @@ Adding another scale for colour, which will replace the existing scale.</code></
 </div>
 <p>We can use <code>RColorBrewer</code> palettes instead and specify that we want to drop the colors on the extreme ends of the <code>Spectral</code> palette:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-45_2138e4bf8e85f7846bc594f48fa0150e">
-<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">10</span>, <span class="st">'Spectral'</span>))[<span class="dv">3</span><span class="sc">:</span><span class="dv">8</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">10</span>, <span class="st">'Spectral'</span>))[<span class="dv">3</span><span class="sc">:</span><span class="dv">8</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for colour is already present.
 Adding another scale for colour, which will replace the existing scale.</code></pre>
@@ -1228,7 +1226,7 @@ Adding another scale for colour, which will replace the existing scale.</code></
 </div>
 <p>And add a legend title</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-46_e130c8f59e0f889aacdb63c8ffdff3b2">
-<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">10</span>, <span class="st">'Spectral'</span>))[<span class="dv">3</span><span class="sc">:</span><span class="dv">8</span>]) <span class="sc">&amp;</span> <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"log1p</span><span class="sc">\n</span><span class="st">(counts)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_sub, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD74"</span>), <span class="at">reduction =</span> <span class="st">'umap.cca'</span>, <span class="at">order =</span> T, <span class="at">slot =</span> <span class="st">'data'</span>, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">repel =</span> <span class="cn">TRUE</span>) <span class="sc">&amp;</span> <span class="fu">scale_color_gradientn</span>(<span class="at">colors =</span> <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="dv">10</span>, <span class="st">'Spectral'</span>))[<span class="dv">3</span><span class="sc">:</span><span class="dv">8</span>]) <span class="sc">&amp;</span> <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"log1p</span><span class="sc">\n</span><span class="st">(counts)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for colour is already present.
 Adding another scale for colour, which will replace the existing scale.</code></pre>
@@ -1243,7 +1241,7 @@ Adding another scale for colour, which will replace the existing scale.</code></
 </div>
 <p>We can also make a heatmap of the cluster markers:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-47_aa05c30ce998ef5cd66bff52cc156241">
-<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(ifnb_sub, <span class="at">downsample =</span> <span class="dv">100</span>), <span class="at">features =</span> top_cluster_markers<span class="sc">$</span>gene, <span class="at">size =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(ifnb_sub, <span class="at">downsample =</span> <span class="dv">100</span>), <span class="at">features =</span> top_cluster_markers<span class="sc">$</span>gene, <span class="at">size =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1254,7 +1252,7 @@ Adding another scale for colour, which will replace the existing scale.</code></
 </div>
 <p>We can customize this heatmap as well:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-48_5cabd1b1d6529ea1cf51d86fd3299c62">
-<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(ifnb_sub, <span class="at">downsample =</span> <span class="dv">100</span>), <span class="at">features =</span> top_cluster_markers<span class="sc">$</span>gene, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">&amp;</span> <span class="fu">scale_fill_viridis</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(ifnb_sub, <span class="at">downsample =</span> <span class="dv">100</span>), <span class="at">features =</span> top_cluster_markers<span class="sc">$</span>gene, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">&amp;</span> <span class="fu">scale_fill_viridis</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for fill is already present.
 Adding another scale for fill, which will replace the existing scale.</code></pre>
@@ -1269,7 +1267,7 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 </div>
 <p>We can adjust which legends are shown, like this:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-49_6ca07517cafa28e793f939186cf49b55">
-<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(ifnb_sub, <span class="at">downsample =</span> <span class="dv">100</span>), <span class="at">features =</span> top_cluster_markers<span class="sc">$</span>gene, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">&amp;</span> <span class="fu">scale_fill_viridis</span>() <span class="sc">&amp;</span> <span class="fu">guides</span>(<span class="at">fill=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(ifnb_sub, <span class="at">downsample =</span> <span class="dv">100</span>), <span class="at">features =</span> top_cluster_markers<span class="sc">$</span>gene, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">&amp;</span> <span class="fu">scale_fill_viridis</span>() <span class="sc">&amp;</span> <span class="fu">guides</span>(<span class="at">fill=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for fill is already present.
 Adding another scale for fill, which will replace the existing scale.</code></pre>
@@ -1288,7 +1286,7 @@ of ggplot2 3.3.4.</code></pre>
 </div>
 <p>Or like this:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-50_55c75171dd0908f045c68a780ca68270">
-<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(ifnb_sub, <span class="at">downsample =</span> <span class="dv">100</span>), <span class="at">features =</span> top_cluster_markers<span class="sc">$</span>gene, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">&amp;</span> <span class="fu">scale_fill_viridis</span>() <span class="sc">&amp;</span>  <span class="fu">guides</span>(<span class="at">colour=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(ifnb_sub, <span class="at">downsample =</span> <span class="dv">100</span>), <span class="at">features =</span> top_cluster_markers<span class="sc">$</span>gene, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">&amp;</span> <span class="fu">scale_fill_viridis</span>() <span class="sc">&amp;</span>  <span class="fu">guides</span>(<span class="at">colour=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for fill is already present.
 Adding another scale for fill, which will replace the existing scale.</code></pre>
@@ -1303,8 +1301,8 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 </div>
 <p>How long did it take to run through the notebook?</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-51_23a7fe52b4828b110f06d76b0a7dc564">
-<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>nb.end.time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a>nb.end.time <span class="sc">-</span> nb.start.time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>nb.end.time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb154-2"><a href="#cb154-2" aria-hidden="true" tabindex="-1"></a>nb.end.time <span class="sc">-</span> nb.start.time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Time difference of 14.16226 mins</code></pre>
 </div>
