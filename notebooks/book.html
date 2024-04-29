@@ -99,10 +99,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="to-use-this-notebook" class="level2">
 <h2 class="anchored" data-anchor-id="to-use-this-notebook">To use this notebook</h2>
 <ol type="1">
-<li>Go to ood.ccv.brown.edu (you will need an Oscar account).</li>
-<li>Go to ‘Clusters’ in the blue menu bar at the top and click the drop-down that says ‘&gt;_OSCAR Shell Access’</li>
-<li>Go to your home folder and make a folder called <code>dscov_singlecell_2024</code> (<code>cd ~</code> and <code>mkdir scrna_r_workshop_2023</code>), then type <code>pwd</code> to get the path to this folder.</li>
-<li>Look under <code>Interactive Apps</code> in the blue menu bar and click on <code>RStudio on Singularity</code> under <code>Expert GUIs</code>.</li>
+<li>Go to <code>ood.ccv.brown.edu</code> (you will need an Oscar account).</li>
+<li>Go to <code>Clusters</code> in the blue menu bar at the top and click the drop-down that says ‘&gt;_OSCAR Shell Access’</li>
+<li>Go to your home folder (<code>cd ~</code>)</li>
+<li>Git clone the repo (<code>git clone https://github.com/compbiocore/dscov_singlecell_2024.git</code>).</li>
+<li>Go back to <code>ood.ccv.brown.edu</code> and look under <code>Interactive Apps</code> in the blue menu bar and click on <code>RStudio on Singularity</code> under <code>Expert GUIs</code>.</li>
 </ol>
 <p>Fill in the fields as follows:</p>
 <ul>
@@ -116,20 +117,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
 <li><code>Memory</code>: 90<br>
 </li>
-<li><code>Singularity Container Path</code>: /gpfs/data/shared/databases/workshops/bootcamp_2023/scrna_r_workshop.sif<br>
+<li><code>Singularity Container Path</code>: /oscar/data/shared/databases/workshops/dscov/dscov_singlecell_2024/metadata/dscov_singlecell_2024:latest.sif<br>
 </li>
 <li><code>Package install Path</code>: leave blank<br>
 </li>
-<li><code>Path for R Executable</code>: This should be the full path to the <code>scrna_r_workshop_2023</code> you made in step 3.<br>
+<li><code>Path for R Executable</code>: This should be the full path to where you cloned the repo in step 4.<br>
 </li>
 <li><code>R Module</code>: leave blank<br>
 </li>
-<li><code>Additional Data Path</code>: /gpfs/data/shared/databases/workshops/bootcamp_2023/scrna_r_workshop<br>
+<li><code>Additional Data Path</code>: leave blank<br>
 </li>
 </ul>
 <p>Once your job starts, click the button to connect to session.<br>
 At the top of the screen you’ll see a menu bar that starts with ‘file’, click on ‘file’ and ‘open file’.<br>
-Open the Rproj file.<br>
+Open the <code>dscov_singlecell_2024.Rproj</code> file in the root folder of the repo.<br>
 </p>
 </section>
 <section id="introduction-to-scrna-seq" class="level2">
