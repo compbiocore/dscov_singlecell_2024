@@ -229,18 +229,18 @@ Important
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>?future<span class="sc">::</span>plan</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we set workers=8 because we’ve requested 8 cores. Additionally, we set <code>multisession</code> instead of <code>multiprocess</code> despite what the vignette says, because <code>multiprocess</code> is actually deprecated in <code>future</code> and we should be explicitly specifying <code>multisession</code> or <code>multico re</code> instead. Getting into the difference is out of scope of this workshop, but you can <a href="https://cran.r-project.org/web/packages/future/vignettes/future-1-overview.html">read more</a> on future yourself if interested.</p>
-<div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-4_fa82d263ed8ad9669218025d7a60d9a0">
+<div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-4_8f71d02bbeb79f042ec4a24fa96d6730">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change the current plan to access parallelization</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers =</span> <span class="dv">4</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers =</span> <span class="dv">8</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>multisession:
-- args: function (..., workers = 4, envir = parent.frame())
+- args: function (..., workers = 8, envir = parent.frame())
 - tweaked: TRUE
-- call: plan("multisession", workers = 4)</code></pre>
+- call: plan("multisession", workers = 8)</code></pre>
 </div>
 </div>
-<p>We’ll also set a seed at the start of the notebook so that we can reproduce our results if we decide to re-run this notebook at some future date. We also set <code>future.globals.maxSize</code>, see the Seurat future vignette linked above for discussion about why we do this (basical ly we might be exceeding the allowed global variable size so we make that default bigger). We will also track how long it takes us to run through this notebook:</p>
+<p>We’ll also set a seed at the start of the notebook so that we can reproduce our results if we decide to re-run this notebook at some future date. We also set <code>future.globals.maxSize</code>, see the Seurat future vignette linked above for discussion about why we do this (basically we might be exceeding the allowed global variable size so we make that default bigger). We will also track how long it takes us to run through this notebook:</p>
 <div class="cell" data-layout-align="center" data-hash="book_cache/html/unnamed-chunk-5_c5e637476e350dd8c488939fdd94be8d">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">61</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">future.globals.maxSize =</span> <span class="dv">4000</span> <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>)</span>

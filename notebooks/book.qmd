@@ -124,11 +124,11 @@ Now, we set workers=8 because we've requested 8 cores. Additionally, we set `mul
 
 ```{r}
 # change the current plan to access parallelization
-plan("multisession", workers = 4)
+plan("multisession", workers = 8)
 plan()
 ```
 
-We'll also set a seed at the start of the notebook so that we can reproduce our results if we decide to re-run this notebook at some future date. We also set `future.globals.maxSize`, see the Seurat future vignette linked above for discussion about why we do this (basical ly we might be exceeding the allowed global variable size so we make that default bigger). We will also track how long it takes us to run through this notebook:
+We'll also set a seed at the start of the notebook so that we can reproduce our results if we decide to re-run this notebook at some future date. We also set `future.globals.maxSize`, see the Seurat future vignette linked above for discussion about why we do this (basically we might be exceeding the allowed global variable size so we make that default bigger). We will also track how long it takes us to run through this notebook:
 
 ```{r}
 set.seed(61)
@@ -194,7 +194,7 @@ We can look at the Seurat object we've loaded from SeuratData and see that Seura
 ifnb
 ```
 
-We will aim to eventually integrate the different samples (`IMMUNE_CTRL` and `IMMUNE_STIM"` from `orig.ident`) together. In previous versions of Seurat, we would require the data to be represented as a list different different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers.
+We will aim to eventually integrate the different samples (`IMMUNE_CTRL` and `IMMUNE_STIM` from `orig.ident`) together. In previous versions of Seurat, we would require the data to be represented as a list of different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers.
 
 ```{r}
 ifnb[["RNA"]] <- split(ifnb[["RNA"]], f = ifnb$orig.ident)
@@ -205,7 +205,7 @@ After splitting, there are now 4 layers (a counts and data layer for each batch)
 
 ## Data QC
 
--   We care about the percentage of reads that map to the mitochondrial genome because high mitochondrial reads in a cell can indicate that the cells are low-quality or dying cells. The mitochondrial QC metrics are calcualted with the `PercentageFeatureSet()` function, which calculates the percentage of counts originating from a set of features. We use the set of all genes starting with MT- as a set of mitochondrial genes -- the format of the mt sequences will vary depending on which organism/genome is used...(might be 'mt-' for example). In this `ifnb` test dataset, there are no mitochondrial reads.
+We care about the percentage of reads that map to the mitochondrial genome because high mitochondrial reads in a cell can indicate that the cells are low-quality or dying cells. The mitochondrial QC metrics are calculated with the `PercentageFeatureSet()` function, which calculates the percentage of counts originating from a set of features. We use the set of all genes starting with MT- as a set of mitochondrial genes -- the format of the mt sequences will vary depending on which organism/genome is used...(might be 'mt-' for example). In this `ifnb` test dataset, there are no mitochondrial reads.
 
 ```{r "Figure out format of MT gene IDs"}
 rownames(ifnb) %>% grep(pattern = '^mt-', ignore.case = TRUE, value = TRUE)
@@ -215,16 +215,16 @@ rownames(ifnb) %>% grep(pattern = '^mt-', ignore.case = TRUE, value = TRUE)
 ifnb[["percent.mt"]] <- PercentageFeatureSet(ifnb, pattern = "^MT-")
 ```
 
--   Before we plot, we can set the order of the object idents to whatever order we'd like:
+Before we plot, we can set the order of the object idents to whatever order we'd like:
 
 ```{r}
 Idents(ifnb) <- 'orig.ident'
 levels(ifnb) <- c("IMMUNE_CTRL", "IMMUNE_STIM")
 ```
 
--   We can also look at plots showing the distribution of the `percent.mt`, `nFeature_RNA` and `nCount_RNA`
--   `nFeature_RNA` is the number of genes
--   `nCount_RNA` is the number of UMIs (unique molecules -- like counts)
+We can also look at plots showing the distribution of the `percent.mt`, `nFeature_RNA` and `nCount_RNA`
+*  `nFeature_RNA` is the number of genes
+*  `nCount_RNA` is the number of UMIs (unique molecules -- like counts)
 
 ```{r}
 VlnPlot(ifnb, features = "nFeature_RNA")
@@ -261,7 +261,7 @@ ggplot(qc_data, aes(x = nCount_RNA, y = nFeature_RNA, color = percent.mt)) +
 -   Doublets or multiplets will have high gene counts (`nFeatures`)
 -   The total number of molecules (`nCount`) detected in a cell corresponds with the number of genes (`nFeatures`)
 -   Most of the cells have less than 2000 genes and less than 7000 or so UMIs.
--   Very low mitochondrial counts from the `ifnb` data and the nFeature_RNA scatter plots look strange -- perhaps this dataset was pre-filtered before being packaged into SeuratData.
+-   Very low mitochondrial counts from the `ifnb` data -- perhaps this dataset was pre-filtered before being packaged into SeuratData.
 -   Our goal in QC filtering is to retain as much useful information as we can, while removing doublets, empty droplets, and dead cells.
 -   We will pick some thresholds for filtering based off of what we see in our data, keeping in mind that if you are doing this with your own data, your plots and thresholds will probably look a bit different.
 
@@ -294,7 +294,7 @@ SCTransform might not work well if your data is highly heterogeneous and you exp
 
 ### SCTransform versions
 
-Seurat v5 run SCTransform v2 (https://satijalab.org/seurat/archive/v4.3/sctransform_v2_vignette) by default, while Seurat v4 ran SCTransform v1 by default. SCTransform v2 "improves speed and memory consumption, the stability of parameter estimates, the identification of variable features, and the the ability to perform downstream differential expression analyses." This means you might get different results if you run Seurat v5 and re-normalize data that you have previously processed with Seurat v4. If you want to change from the default veresion of SCTransform, you can add the argument `vst.flavor = "v1"` (or `vst.flavor = "v2"`))
+Seurat v5 run SCTransform v2 (https://satijalab.org/seurat/archive/v4.3/sctransform_v2_vignette) by default, while Seurat v4 ran SCTransform v1 by default. SCTransform v2 "improves speed and memory consumption, the stability of parameter estimates, the identification of variable features, and the ability to perform downstream differential expression analyses." This means you might get different results if you run Seurat v5 and re-normalize data that you have previously processed with Seurat v4. If you want to change from the default version of SCTransform, you can add the argument `vst.flavor = "v1"` (or `vst.flavor = "v2"`))
 
 ### Running SCTransform
 
@@ -311,7 +311,6 @@ end.time - start.time
 Run PCA and make an elbow plot
 
 ```{r}
-
 ifnb_sub <- RunPCA(ifnb_sub)
 ElbowPlot(ifnb_sub)
 ```
@@ -320,7 +319,7 @@ Based on this plot, we get diminishing information returned once we get above \~
 
 ## Integration
 
-Seurat v5 enables streamlined integrative analysis using the IntegrateLayers function. The method currently supports five integration methods. Each of these methods performs integration in low-dimensional space, and returns a dimensional reduction (i.e. integrated.rpca) that aims to co-embed shared cell types across batches (samples):
+Seurat v5 enables streamlined integrative analysis using the `IntegrateLayers` function. The method currently supports five integration methods. Each of these methods performs integration in low-dimensional space, and returns a dimensional reduction (i.e. integrated.rpca) that aims to co-embed shared cell types across batches (samples):
 
 ```         
 Anchor-based CCA integration (method=CCAIntegration)
@@ -433,7 +432,7 @@ p4 <- DimPlot(
 p4
 ```
 
-You can manually set the colors for the clusters, like this: First, get a list of all the built in colors that R knows about and use `grep` to remove anything with `gray` or `grey` in the color name.
+You can manually set the colors for the clusters, like this: First, get a list of all the built in colors that R knows about and use `grep` to remove anything with `gray` or `grey` or `light` in the color name.
 
 ```{r}
 colors <- grDevices::colors()[grep('gr(a|e)y|light', grDevices::colors(), invert = T)]
@@ -550,7 +549,7 @@ top_cluster_markers <-
 print(top_cluster_markers, n = 37)
 ```
 
-Make a `FeaturePlot` to look at the expression of one of the cluster markers. It will plot the `data` slot from the default assay. We can switch the default assay to SCT first and specify that we want to use the `data` slot (log1p(counts)(:
+Make a `FeaturePlot` to look at the expression of one of the cluster markers. It will plot the `data` slot from the default assay. We can switch the default assay to SCT first and specify that we want to use the `data` slot (log1p(counts)):
 
 ```{r}
 DefaultAssay(ifnb_sub) <- "SCT"
