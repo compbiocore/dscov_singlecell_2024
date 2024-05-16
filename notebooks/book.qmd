@@ -222,9 +222,7 @@ Idents(ifnb) <- 'orig.ident'
 levels(ifnb) <- c("IMMUNE_CTRL", "IMMUNE_STIM")
 ```
 
-We can also look at plots showing the distribution of the `percent.mt`, `nFeature_RNA` and `nCount_RNA`
-*  `nFeature_RNA` is the number of genes
-*  `nCount_RNA` is the number of UMIs (unique molecules -- like counts)
+We can also look at plots showing the distribution of the `percent.mt`, `nFeature_RNA` and `nCount_RNA` \* `nFeature_RNA` is the number of genes \* `nCount_RNA` is the number of UMIs (unique molecules -- like counts)
 
 ```{r}
 VlnPlot(ifnb, features = "nFeature_RNA")
